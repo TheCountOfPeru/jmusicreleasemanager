@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JFormattedTextField;
 
 public class GUIframe extends JFrame{
 	private JTextField artistfield;
@@ -30,8 +31,19 @@ public class GUIframe extends JFrame{
 	private JComboBox<?> comboBoxReleaseType;
 	private JComboBox<?> comboBoxEdition;
 	private JComboBox<?> comboBoxEditionType;
-	public GUIframe() {
+	private sqlfunctions mydatabase;
+	private JDatePicker datepicker;
+	private java.sql.Date selectedDate;
+	
+	public GUIframe(sqlfunctions mydatabase) {
+		setResizable(false);
+		
+		this.setDriver(mydatabase);
+		
 		setTitle("JMusicReleaseManager");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(null);
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{434, 0};
 		gridBagLayout.rowHeights = new int[]{261, 0};
@@ -68,6 +80,7 @@ public class GUIframe extends JFrame{
 				comboBoxReleaseType.setSelectedIndex(-1);
 				comboBoxEdition.setSelectedItem(-1); 
 				comboBoxEditionType.setSelectedItem(-1); 
+				//datepicker.
 			}
 		});
 		GridBagConstraints gbc_btnClearAll = new GridBagConstraints();
@@ -77,6 +90,23 @@ public class GUIframe extends JFrame{
 		addtodbpanel.add(btnClearAll, gbc_btnClearAll);
 		
 		JToggleButton tglbtnSubmit = new JToggleButton("Submit");
+		tglbtnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				selectedDate = (java.sql.Date) datepicker.getModel().getValue();
+				System.out.println(selectedDate.);
+				/*
+				if(artistfield.getText().equals("") || releasenamefield.getText().equals("")
+						) {
+					
+				}
+				mydatabase.insertData(mydatabase, artistfield.getText(), 
+						releasenamefield.getText(), (String)comboBoxReleaseType.getSelectedItem(),
+						selectedDate, urlfield.getText(),
+						(String)comboBoxEdition.getSelectedItem()+(String)comboBoxEditionType.getSelectedItem(), 
+						labelfield.getText(), catalogfield.getText(), musicbrainzfield.getText(), discogsfield.getText());
+						*/
+			}
+		});
 		GridBagConstraints gbc_tglbtnSubmit = new GridBagConstraints();
 		gbc_tglbtnSubmit.insets = new Insets(0, 0, 5, 5);
 		gbc_tglbtnSubmit.gridx = 1;
@@ -142,7 +172,7 @@ public class GUIframe extends JFrame{
 		gbc_lblReleaseDate.gridy = 4;
 		addtodbpanel.add(lblReleaseDate, gbc_lblReleaseDate);
 		
-		JDatePicker datepicker = new JDatePicker();
+		datepicker = new JDatePicker();
 		GridBagConstraints gbc_btnNewDatePicker = new GridBagConstraints();
 		gbc_btnNewDatePicker.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnNewDatePicker.insets = new Insets(0, 0, 5, 5);
@@ -271,9 +301,16 @@ public class GUIframe extends JFrame{
 		gbl_searchdbpanel.rowWeights = new double[]{Double.MIN_VALUE};
 		searchdbpanel.setLayout(gbl_searchdbpanel);
 		
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
 		
-		
-		
+	}
+	public sqlfunctions getDriver() {
+		return mydatabase;
+	}
+	public void setDriver(sqlfunctions mydatabase) {
+		this.mydatabase = mydatabase;
 	}
 	
 }
