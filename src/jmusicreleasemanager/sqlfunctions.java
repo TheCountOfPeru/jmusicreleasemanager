@@ -33,15 +33,39 @@ public class sqlfunctions {
 		System.out.println("Connected to the database....");
 		
 	}
+	/**
+	 * The main function for inserting into a database
+	 * @param sqlfunctionsDriver
+	 * @param ARTIST
+	 * @param ReleaseName
+	 * @param ReleaseType
+	 * @param ReleaseDate
+	 * @param URL
+	 * @param Edition
+	 * @param Label
+	 * @param Catalog
+	 * @param musicbrainz
+	 * @param discogs
+	 */
 	public void insertData(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, Date ReleaseDate, 
 			String URL, String Edition, String Label, String Catalog, String musicbrainz, String discogs) {
 		String query = " insert into releases (ARTIST, ReleaseName, ReleaseType, ReleaseDate, URL, Edition, Label, Catalog, musicbrainz, discogs)"
 				+" values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	}
-	public void insertData(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, Date ReleaseDate, String Edition) {
-		String query = " insert into releases (ARTIST, ReleaseName, ReleaseType, ReleaseDate, URL, Edition, Label, Catalog, musicbrainz, discogs)"
-				+" values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	}
+	/**
+	 * The main function for updating entries in a database
+	 * @param sqlfunctionsDriver
+	 * @param ARTIST
+	 * @param ReleaseName
+	 * @param ReleaseType
+	 * @param ReleaseDate
+	 * @param URL
+	 * @param Edition
+	 * @param Label
+	 * @param Catalog
+	 * @param musicbrainz
+	 * @param discogs
+	 */
 	public void updateDate(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, Date ReleaseDate, 
 			String URL, String Edition, String Label, String Catalog, String musicbrainz, String discogs) {
 		java.sql.Date sqlDate = new java.sql.Date(ReleaseDate.getTime());
