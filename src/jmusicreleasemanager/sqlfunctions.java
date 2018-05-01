@@ -33,14 +33,14 @@ public class sqlfunctions {
 		System.out.println("Connected to the database....");
 		
 	}
-	public void insertData(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, Date ReleaseDate, 
+	public void insertData(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, java.sql.Date ReleaseDate, 
 			String URL, String Edition, String Label, String Catalog, String musicbrainz, String discogs) {
 		String query = " insert into releases (ARTIST, ReleaseName, ReleaseType, ReleaseDate, URL, Edition, Label, Catalog, musicbrainz, discogs)"
 				+" values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	}
-	public void updateDate(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, Date ReleaseDate, 
+	public void updateDate(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, java.sql.Date ReleaseDate, 
 			String URL, String Edition, String Label, String Catalog, String musicbrainz, String discogs) {
-		java.sql.Date sqlDate = new java.sql.Date(ReleaseDate.getTime());
+		//java.sql.Date sqlDate = new java.sql.Date(ReleaseDate.getTime());
 		String query = " update releases set ARTIST = ?, ReleaseName = ?, ReleaseType = ?, ReleaseDate = ?, "
 				+ "URL = ?, Edition = ?, Label = ?, Catalog = ?, musicbrainz = ?, discogs = ? where "
 				+ "ReleaseName = ? and ReleaseDate = ? and Edition = ?;";
@@ -50,7 +50,7 @@ public class sqlfunctions {
 			preparedStmt.setString (1, ARTIST);
 			preparedStmt.setString (2, ReleaseName);
 			preparedStmt.setString (3, ReleaseType);
-			preparedStmt.setDate(4, sqlDate);
+			preparedStmt.setDate(4, ReleaseDate);
 	      	preparedStmt.setString (5, URL);
 	      	preparedStmt.setString (6, Edition);
 	      	preparedStmt.setString (7, Label);
@@ -58,7 +58,7 @@ public class sqlfunctions {
 	      	preparedStmt.setString (9, musicbrainz);
 	      	preparedStmt.setString (10, discogs);
 	      	preparedStmt.setString (11, ReleaseName);
-	      	preparedStmt.setDate(12, sqlDate);
+	      	preparedStmt.setDate(12, ReleaseDate);
 	      	preparedStmt.setString (13, Edition);
 	      	preparedStmt.execute();
 		} catch (SQLException e) {

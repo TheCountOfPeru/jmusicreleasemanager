@@ -17,6 +17,8 @@ import org.jdatepicker.JDatePicker;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JFormattedTextField;
 
@@ -33,7 +35,7 @@ public class GUIframe extends JFrame{
 	private JComboBox<?> comboBoxEditionType;
 	private sqlfunctions mydatabase;
 	private JDatePicker datepicker;
-	private java.sql.Date selectedDate;
+	private JTextField datefield;
 	
 	public GUIframe(sqlfunctions mydatabase) {
 		setResizable(false);
@@ -92,8 +94,12 @@ public class GUIframe extends JFrame{
 		JToggleButton tglbtnSubmit = new JToggleButton("Submit");
 		tglbtnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				selectedDate = (java.sql.Date) datepicker.getModel().getValue();
-				System.out.println(selectedDate.);
+				//Date selectedDate = (Date) datepicker.getModel().getValue();
+				String adate = datepicker.getFormattedTextField().getText();
+				//java.sql.Date sqlDate = new java.sql.Date(adate);
+				System.out.println();
+				java.sql.Date selectedDate = (java.sql.Date) datepicker.getModel().getValue();
+				System.out.println(selectedDate.toString());
 				/*
 				if(artistfield.getText().equals("") || releasenamefield.getText().equals("")
 						) {
@@ -164,29 +170,22 @@ public class GUIframe extends JFrame{
 		gbc_comboBoxReleaseType.gridy = 3;
 		addtodbpanel.add(comboBoxReleaseType, gbc_comboBoxReleaseType);
 		
-		
 		JLabel lblReleaseDate = new JLabel("Release Date");
 		GridBagConstraints gbc_lblReleaseDate = new GridBagConstraints();
+		gbc_lblReleaseDate.anchor = GridBagConstraints.EAST;
 		gbc_lblReleaseDate.insets = new Insets(0, 0, 5, 5);
 		gbc_lblReleaseDate.gridx = 0;
 		gbc_lblReleaseDate.gridy = 4;
 		addtodbpanel.add(lblReleaseDate, gbc_lblReleaseDate);
 		
 		datepicker = new JDatePicker();
+		//datepicker.getDateFormat().
 		GridBagConstraints gbc_btnNewDatePicker = new GridBagConstraints();
 		gbc_btnNewDatePicker.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnNewDatePicker.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNewDatePicker.gridx = 1;
 		gbc_btnNewDatePicker.gridy = 4;
 		addtodbpanel.add(datepicker, gbc_btnNewDatePicker);
-		
-		JLabel lblEdition = new JLabel("Edition");
-		lblEdition.setHorizontalAlignment(SwingConstants.CENTER);
-		GridBagConstraints gbc_lblEdition = new GridBagConstraints();
-		gbc_lblEdition.insets = new Insets(0, 0, 5, 5);
-		gbc_lblEdition.gridx = 0;
-		gbc_lblEdition.gridy = 5;
-		addtodbpanel.add(lblEdition, gbc_lblEdition);
 		
 		comboBoxEdition = new JComboBox();
 		comboBoxEdition.setModel(new DefaultComboBoxModel(new String[] {"Regular", "Limited"}));
