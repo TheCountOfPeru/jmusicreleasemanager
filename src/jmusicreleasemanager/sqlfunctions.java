@@ -37,6 +37,24 @@ public class sqlfunctions {
 			String URL, String Edition, String Label, String Catalog, String musicbrainz, String discogs) {
 		String query = " insert into releases (ARTIST, ReleaseName, ReleaseType, ReleaseDate, URL, Edition, Label, Catalog, musicbrainz, discogs)"
 				+" values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		PreparedStatement preparedStmt;
+		try {
+			preparedStmt = sqlfunctionsDriver.myConn.prepareStatement(query);
+			preparedStmt.setString (1, ARTIST);
+			preparedStmt.setString (2, ReleaseName);
+			preparedStmt.setString (3, ReleaseType);
+			preparedStmt.setDate(4, ReleaseDate);
+	      	preparedStmt.setString (5, URL);
+	      	preparedStmt.setString (6, Edition);
+	      	preparedStmt.setString (7, Label);
+	      	preparedStmt.setString (8, Catalog);
+	      	preparedStmt.setString (9, musicbrainz);
+	      	preparedStmt.setString (10, discogs);
+	      	preparedStmt.execute();
+		} catch (SQLException e) {
+			System.out.println("Error. Unable to insert into the database.");
+			e.printStackTrace();
+		}
 	}
 	public void updateDate(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, java.sql.Date ReleaseDate, 
 			String URL, String Edition, String Label, String Catalog, String musicbrainz, String discogs) {

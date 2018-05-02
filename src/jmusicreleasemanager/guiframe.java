@@ -6,21 +6,19 @@ import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Insets;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.SwingConstants;
-
 import org.jdatepicker.JDatePicker;
 
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.awt.event.ActionEvent;
-import javax.swing.JFormattedTextField;
 
 public class GUIframe extends JFrame{
 	private JTextField artistfield;
@@ -94,23 +92,28 @@ public class GUIframe extends JFrame{
 		JToggleButton tglbtnSubmit = new JToggleButton("Submit");
 		tglbtnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//Date selectedDate = (Date) datepicker.getModel().getValue();
-				String adate = datepicker.getFormattedTextField().getText();
-				//java.sql.Date sqlDate = new java.sql.Date(adate);
-				System.out.println();
-				java.sql.Date selectedDate = (java.sql.Date) datepicker.getModel().getValue();
-				System.out.println(selectedDate.toString());
-				/*
-				if(artistfield.getText().equals("") || releasenamefield.getText().equals("")
+				//String adate = datepicker.getFormattedTextField().getText();
+				java.util.GregorianCalendar selectedDate = (GregorianCalendar) datepicker.getModel().getValue();
+				Calendar calendar = (Calendar)selectedDate;
+				java.sql.Date date = new java.sql.Date(calendar.getTimeInMillis());
+				System.out.println(date.toString());
+				
+				if(artistfield.getText().equals("") || releasenamefield.getText().equals("")//make sure the primary keys are included
 						) {
-					
+					JOptionPane.showMessageDialog(null,
+			    		    "You cannot create a new release with an empty Artist or an empty Release name! Both must be filled.",
+			    		    "Error",
+			    		    JOptionPane.WARNING_MESSAGE);
+
 				}
 				mydatabase.insertData(mydatabase, artistfield.getText(), 
 						releasenamefield.getText(), (String)comboBoxReleaseType.getSelectedItem(),
-						selectedDate, urlfield.getText(),
+						date, urlfield.getText(),
 						(String)comboBoxEdition.getSelectedItem()+(String)comboBoxEditionType.getSelectedItem(), 
 						labelfield.getText(), catalogfield.getText(), musicbrainzfield.getText(), discogsfield.getText());
-						*/
+				
+				
+						
 			}
 		});
 		GridBagConstraints gbc_tglbtnSubmit = new GridBagConstraints();
@@ -172,7 +175,6 @@ public class GUIframe extends JFrame{
 		
 		JLabel lblReleaseDate = new JLabel("Release Date");
 		GridBagConstraints gbc_lblReleaseDate = new GridBagConstraints();
-		gbc_lblReleaseDate.anchor = GridBagConstraints.EAST;
 		gbc_lblReleaseDate.insets = new Insets(0, 0, 5, 5);
 		gbc_lblReleaseDate.gridx = 0;
 		gbc_lblReleaseDate.gridy = 4;
@@ -186,6 +188,13 @@ public class GUIframe extends JFrame{
 		gbc_btnNewDatePicker.gridx = 1;
 		gbc_btnNewDatePicker.gridy = 4;
 		addtodbpanel.add(datepicker, gbc_btnNewDatePicker);
+		
+		JLabel lblEdition = new JLabel("Edition");
+		GridBagConstraints gbc_lblEdition = new GridBagConstraints();
+		gbc_lblEdition.insets = new Insets(0, 0, 5, 5);
+		gbc_lblEdition.gridx = 0;
+		gbc_lblEdition.gridy = 5;
+		addtodbpanel.add(lblEdition, gbc_lblEdition);
 		
 		comboBoxEdition = new JComboBox();
 		comboBoxEdition.setModel(new DefaultComboBoxModel(new String[] {"Regular", "Limited"}));
