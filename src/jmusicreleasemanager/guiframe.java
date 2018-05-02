@@ -92,28 +92,37 @@ public class GUIframe extends JFrame{
 		JToggleButton tglbtnSubmit = new JToggleButton("Submit");
 		tglbtnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//String adate = datepicker.getFormattedTextField().getText();
+				boolean exists;
+				//make sure the primary keys are included
+				if(artistfield.getText().equals("") || releasenamefield.getText().equals("") 
+						|| comboBoxReleaseType.getSelectedIndex() == -1
+						|| datepicker.getFormattedTextField().getText().equals("")) {
+					JOptionPane.showMessageDialog(null,
+			    		    "A new release must have an artist, name, and type, and date!",
+			    		    "Error",
+			    		    JOptionPane.WARNING_MESSAGE);
+						return;
+				}
 				java.util.GregorianCalendar selectedDate = (GregorianCalendar) datepicker.getModel().getValue();
 				Calendar calendar = (Calendar)selectedDate;
 				java.sql.Date date = new java.sql.Date(calendar.getTimeInMillis());
 				System.out.println(date.toString());
-				
-				if(artistfield.getText().equals("") || releasenamefield.getText().equals("")//make sure the primary keys are included
-						) {
-					JOptionPane.showMessageDialog(null,
-			    		    "You cannot create a new release with an empty Artist or an empty Release name! Both must be filled.",
-			    		    "Error",
-			    		    JOptionPane.WARNING_MESSAGE);
-
-				}
-				mydatabase.insertData(mydatabase, artistfield.getText(), 
+				exists = mydatabase.check_dup(mydatabase, artistfield.getText(), 
+						releasenamefield.getText(), (String)comboBoxReleaseType.getSelectedItem(), 
+						(String)comboBoxEdition.getSelectedItem()+(String)comboBoxEditionType.getSelectedItem(), date);
+				if(exists) {
+					mydatabase.insertData(mydatabase, artistfield.getText(), 
 						releasenamefield.getText(), (String)comboBoxReleaseType.getSelectedItem(),
 						date, urlfield.getText(),
 						(String)comboBoxEdition.getSelectedItem()+(String)comboBoxEditionType.getSelectedItem(), 
-						labelfield.getText(), catalogfield.getText(), musicbrainzfield.getText(), discogsfield.getText());
-				
-				
-						
+						labelfield.getText(), catalogfield.getText(), musicbrainzfield.getText(), discogsfield.getText());	
+				}else if(!exists){
+					JOptionPane.showMessageDialog(null,
+			    		    "This release already exists!",
+			    		    "Error",
+			    		    JOptionPane.WARNING_MESSAGE);
+				}
+									
 			}
 		});
 		GridBagConstraints gbc_tglbtnSubmit = new GridBagConstraints();
@@ -198,7 +207,7 @@ public class GUIframe extends JFrame{
 		
 		comboBoxEdition = new JComboBox();
 		comboBoxEdition.setModel(new DefaultComboBoxModel(new String[] {"Regular", "Limited"}));
-		comboBoxEdition.setSelectedIndex(-1);
+		comboBoxEdition.setSelectedIndex(0);
 		GridBagConstraints gbc_comboBoxEdition = new GridBagConstraints();
 		gbc_comboBoxEdition.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBoxEdition.insets = new Insets(0, 0, 5, 5);

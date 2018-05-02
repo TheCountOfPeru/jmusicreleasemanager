@@ -84,4 +84,28 @@ public class sqlfunctions {
 			e.printStackTrace();
 		}
 	}
+	public boolean check_dup(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, String Edition, java.sql.Date ReleaseDate) {
+		String query = "SELECT * FROM releases WHERE ARTIST= ? And ReleaseName= ? And ReleaseType= ? And Edition= ? And ReleaseDate= ?";
+		PreparedStatement preparedStmt;
+		boolean check = false;
+		try {
+			preparedStmt = sqlfunctionsDriver.myConn.prepareStatement(query);
+			preparedStmt.setString (1, ARTIST);
+			preparedStmt.setString (2, ReleaseName);
+			preparedStmt.setString (3, ReleaseType);
+			preparedStmt.setString (4, Edition);
+			preparedStmt.setDate (5, ReleaseDate);
+			ResultSet resultSet = preparedStmt.executeQuery(query);
+			if(resultSet.next()){
+	            check =  true;
+	        }else{
+	            check = false;
+	        }
+		} catch (SQLException e) {
+			System.out.println("Error. Unable to check for duplicates in the database.");
+			e.printStackTrace();
+		}
+		return check;
+		
+	}
 }
