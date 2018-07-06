@@ -22,10 +22,10 @@ public class sqlfunctions {
 	 */
 	public sqlfunctions() {
 		try {
-			String URL = "jdbc:mysql://localhost:3306/mydb?autoReconnect=true&useSSL=false";
-			myConn = DriverManager.getConnection(URL, "root", "?t5$Yk^Op;gXtY~1[qs%]5?eb12U>NFL7F.KkshmFkmcRMpy8eGGf2Z&n|VE2C[$");
+			String URL = "jdbc:mysql://localhost:3306/jmusicrelease?autoReconnect=true&useSSL=false";
+			myConn = DriverManager.getConnection(URL, "root", "rootpass");
 			myStmt = myConn.createStatement();
-			myRs = myStmt.executeQuery("SELECT * FROM mydb.releases;");
+			myRs = myStmt.executeQuery("SELECT * FROM jmusicrelease.artist;");
 		}catch (SQLException e) {
 			System.out.println("Error. Unable to create the Driver for JDBC.");
 			e.printStackTrace();
@@ -56,7 +56,7 @@ public class sqlfunctions {
 			e.printStackTrace();
 		}
 	}
-	public void updateDate(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, java.sql.Date ReleaseDate, 
+	public void updateData(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, java.sql.Date ReleaseDate, 
 			String URL, String Edition, String Label, String Catalog, String musicbrainz, String discogs) {
 		//java.sql.Date sqlDate = new java.sql.Date(ReleaseDate.getTime());
 		String query = " update releases set ARTIST = ?, ReleaseName = ?, ReleaseType = ?, ReleaseDate = ?, "

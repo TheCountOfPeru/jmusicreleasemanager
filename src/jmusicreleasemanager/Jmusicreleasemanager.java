@@ -5,7 +5,7 @@ public class Jmusicreleasemanager {
 	public static void main(String[] args) {
 		sqlfunctions mydatabase = new sqlfunctions();
 		//start the gui
-		GUIframe thewindow = new GUIframe(mydatabase);
+		guiframe thewindow = new guiframe(mydatabase);
 		
 	}
 
