@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Insets;
 import javax.swing.JComboBox;
@@ -16,9 +15,10 @@ import org.jdatepicker.JDatePicker;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.awt.event.ActionEvent;
@@ -73,6 +73,8 @@ public class guiframe extends JFrame{
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				textAreaDisplayReleases.setText("");
+				
 				java.util.GregorianCalendar Date = (GregorianCalendar) startReleaseDate.getModel().getValue();
 				Calendar calendar = (Calendar)Date;
 				java.sql.Date afterdate = new java.sql.Date(calendar.getTimeInMillis());
@@ -111,6 +113,50 @@ public class guiframe extends JFrame{
 		gbc_btnClearAll_1.gridx = 1;
 		gbc_btnClearAll_1.gridy = 0;
 		searchReleases.add(btnClearAll_1, gbc_btnClearAll_1);
+		
+		JButton btnPrint = new JButton("Print");
+		btnPrint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				FileWriter out = null;
+				try {
+					out = new FileWriter("output.txt");
+					
+					java.util.GregorianCalendar Date = (GregorianCalendar) startReleaseDate.getModel().getValue();
+					Calendar calendar = (Calendar)Date;
+					java.sql.Date afterdate = new java.sql.Date(calendar.getTimeInMillis());
+					java.sql.Date beforedate = null; 
+					if(endReleaseDate.getModel().getValue()!=null) {
+						Date = (GregorianCalendar) endReleaseDate.getModel().getValue();
+						calendar = (Calendar)Date;
+						beforedate = new java.sql.Date(calendar.getTimeInMillis());
+					}
+					ResultSet rs = mydatabase.retrieveReleasesLarge(mydatabase, afterdate, beforedate);
+					try {
+						while(rs.next()) {
+							out.append("[url="+rs.getString("url")+"]"+
+									rs.getString("artist")+" "+rs.getString("name")+" "+rs.getDate("date").toString()+" "+rs.getString("type")+"[/url]"+
+									System.getProperty( "line.separator" ));
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		GridBagConstraints gbc_btnPrint = new GridBagConstraints();
+		gbc_btnPrint.insets = new Insets(0, 0, 5, 0);
+		gbc_btnPrint.gridx = 2;
+		gbc_btnPrint.gridy = 0;
+		searchReleases.add(btnPrint, gbc_btnPrint);
 		
 		JLabel lblDatesAfter = new JLabel("Dates After");
 		GridBagConstraints gbc_lblDatesAfter = new GridBagConstraints();
@@ -256,28 +302,29 @@ public class guiframe extends JFrame{
 			public void actionPerformed(ActionEvent arg0) {
 				int result;
 				//make sure the primary keys are included when searching
-				/*if(artistfield.getText().equals("") || releasenamefield.getText().equals("") 
+				if(artistfield.getText().equals("") || releasenamefield.getText().equals("") 
 						|| comboBoxReleaseType.getSelectedIndex() == -1
-						|| datepicker.getFormattedTextField().getText().equals("")) {
+						|| newReleaseDate.getFormattedTextField().getText().equals("")) {
 						textPane.setText("A new release must have an artist, name, and type, and date!");
 						return;
 				}
-				java.util.GregorianCalendar selectedDate = (GregorianCalendar) datepicker.getModel().getValue();
+				java.util.GregorianCalendar selectedDate = (GregorianCalendar) newReleaseDate.getModel().getValue();
 				Calendar calendar = (Calendar)selectedDate;
-				java.sql.Date date = new java.sql.Date(calendar.getTimeInMillis());*/
-				java.util.Date date = java.sql.Date.valueOf("2018-03-21");
+				java.sql.Date date = new java.sql.Date(calendar.getTimeInMillis());
+				
+				//java.util.Date date = java.sql.Date.valueOf("2018-03-21");
 				java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());  
 				System.out.println(sqlStartDate);
-				//result = mydatabase.insertData(mydatabase, artistfield.getText(), releasenamefield.getText(), (String)comboBoxReleaseType.getSelectedItem(),
-				//		date, urlfield.getText());
-				result = mydatabase.insertData(mydatabase, "MONKEY MAJIK", "enigma", "album",
-						sqlStartDate, "");
+				result = mydatabase.insertData(mydatabase, artistfield.getText(), releasenamefield.getText(), (String)comboBoxReleaseType.getSelectedItem(),
+						date, urlfield.getText());
+				//result = mydatabase.insertData(mydatabase, "MONKEY MAJIK", "enigma", "album",
+				//		sqlStartDate, "");
 				if(result == 1) {
 					clearInputs();
 					textPane.setText("New release added to the database successfully!");
 				}
 				else if(result == 0) {
-					textPane.setText("New release could not be add to the database! It already exists.");
+					textPane.setText("New release could not be added to the database! It already exists.");
 				}
 			}
 		});

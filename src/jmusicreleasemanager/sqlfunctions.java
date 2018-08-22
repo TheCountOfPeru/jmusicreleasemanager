@@ -175,6 +175,27 @@ public class sqlfunctions {
 		}
 		return rs;
 	}
+	public ResultSet retrieveReleasesLarge(sqlfunctions sqlfunctionsDriver, java.sql.Date afterD, java.sql.Date beforeD){
+		PreparedStatement preparedStmt;
+		ResultSet rs = null;
+		String query = "SELECT release.name, artist.name AS artist, release.date, release.type, release.url\r\n" + 
+				"FROM jmusicrelease.release, jmusicrelease.artist\r\n" + 
+				"WHERE release.artistId=artist.id AND release.date >= '"+afterD.toString()+"'";
+		if(beforeD!=null)
+		{
+			query+="AND release.date <= '"+beforeD.toString()+"'";
+		}
+				 
+		query+="\nORDER BY release.date;";
+		try {
+			preparedStmt = sqlfunctionsDriver.myConn.prepareStatement(query);
+			rs = preparedStmt.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rs;
+	}
+	
 	public void updateData(sqlfunctions sqlfunctionsDriver, String ARTIST, String ReleaseName, String ReleaseType, java.sql.Date ReleaseDate, 
 			String URL, String Edition, String Label, String Catalog, String musicbrainz, String discogs) {
 		//java.sql.Date sqlDate = new java.sql.Date(ReleaseDate.getTime());
